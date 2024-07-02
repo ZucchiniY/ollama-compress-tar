@@ -1,0 +1,27 @@
+#+title: Tape Ollama model to Archive 
+
+When utilizing ollama, there’s often a need to export downloaded models to different environments. However, with an expanding collection of models, the complexity of the recorded information skyrockets, necessitating a feature to package individual models.
+
+Upon examining the data under the ollama list command, it’s evident that within the “models” directory, “blobs” contain the actual models, while “manifests” hold their corresponding information.
+
+Inspecting the content with less, you’ll find JSON code, where the key model data is held within the “digest” field. Automating the packaging process to a designated location is feasible with a script.
+
+Here’s the configuration:
+
+main_path = "$OLLAMA_MODELS" 
+tar_path = "$ARCHIVE_PATH"
+model_name = "gemma2"
+model_version = "latest"
+To proceed, run the script:
+
+#+begin_src shell
+  python main.py
+#+end_src
+
+For backup on a Fat32 USB drive, splitting the tar file into smaller chunks is necessary. Use this command:
+
+#+begin_src shell
+  split -b 500M -d -a 2 <tar_name>.tar.gz <tar_name>.tar.gz.
+#+end_src
+
+This splits the file into 500M segments, naming each part with a 2-digit number.

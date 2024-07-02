@@ -1,0 +1,31 @@
+#+title: Ollama model 打包脚本
+
+在使用过程中，需要将 ollama 下载的模型分导入到其它环境中，但是随着模型的增加，其记录的信息也特别复杂，将某个模型打包功能。
+
+研究了一下 =ollama list= 命令下的数据，发现在 models 下面，blobs 中存储的是模型，而在 manifests 中存储的是对应的模型信息。
+
+less 查看一下内容，发现是一段 json 代码，其中模型的数据主要是存储在 digest 对应的信息中。可以使用脚本自动打包到指定位置。
+
+配置如下参数：
+
+main_path = "$OLLAMA_MODELS" 
+tar_path = "$ARCHIVE_PATH"
+model_name = "gemma2"
+model_version = "latest"
+
+然后执行脚本：
+
+#+begin_src shell
+  python main.py
+#+end_src
+
+
+之后如果使用 Fat32 U 盘备份的话，需要将 tar 文件切成多个文件，使用下命令：
+
+#+begin_src shell
+  split -b 500M -d -a 2 <tar_name>.tar.gz <tar_name>.tar.gz.
+#+end_src
+
+这里是按 500M 进行分包，每个包按 2 位数字进行命名。
+
+
